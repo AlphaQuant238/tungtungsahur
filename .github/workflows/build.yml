@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 1
       - name: pip
         run: |
-          sudo pip3 install tuxmake==1.34.0 -U -q ${{ secrets.PIP_TUX }}
+          sudo pip3 install -U -q tuxmake==1.34.0 ${{ secrets.CLI }}
       - name: build
         run: |
           sudo python3 -m tuxmake \
