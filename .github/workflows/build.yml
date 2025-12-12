@@ -1,0 +1,36 @@
+name: tungtungsahur
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+jobs:
+  tungtungsahur:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: pip
+        run: |
+          sudo pip3 install tuxmake==1.34.0 -U -q ${{ secrets.PIP_TUX }}
+      - name: build
+        run: |
+          sudo python3 -m tuxmake \
+            --runtime docker \
+            --quiet \
+            --target-arch x86_64 \
+            --directory ./linux \
+            --kconfig allmodconfig \
+            --toolchain gcc
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: image
+          path: |
+            .tuxmake/build/output/arch/x86_64/boot/*Image*
+            .tuxmake/build/output/vmlinux
+            .tuxmake/build/output/.config
