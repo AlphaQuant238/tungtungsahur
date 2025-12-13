@@ -7,7 +7,33 @@ on:
     branches: [ "master" ]
 jobs:
   tungtungsahur:
-    name: build
+    name: Build ${{ matrix.arch }}
+    strategy:
+      matrix:
+        arch:
+          - x86_64
+          - arm64
+          - arm
+          - riscv
+          - powerpc
+          - s390
+          - mips
+          - sparc
+          - alpha
+          - arc
+          - csky
+          - h8300
+          - hexagon
+          - ia64
+          - loongarch
+          - m68k
+          - microblaze
+          - nios2
+          - openrisc
+          - parisc
+          - sh
+          - sparc64
+          - xtensa 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,7 +48,7 @@ jobs:
           sudo python3 -m tuxmake \
             --runtime docker \
             --quiet \
-            --target-arch x86_64 \
+            --target-arch ${{ matrix.arch }}  \
             --directory ./linux \
             --kconfig allmodconfig \
             --toolchain gcc
@@ -31,6 +57,6 @@ jobs:
         with:
           name: image
           path: |
-            .tuxmake/build/output/arch/x86_64/boot/*Image*
+            .tuxmake/build/output/arch/${{ matrix.arch }}/boot/*Image*
             .tuxmake/build/output/vmlinux
             .tuxmake/build/output/.config
